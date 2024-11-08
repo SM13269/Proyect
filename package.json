@@ -2,8 +2,9 @@
   "name": "api2024_2",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "src/index.js",
   "type": "module",
+  
   "scripts": {
     "dev": "nodemon src/index.js",
     "start": "node src/index.js"
