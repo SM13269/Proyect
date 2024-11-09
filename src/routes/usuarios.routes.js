@@ -1,11 +1,12 @@
 import {Router} from 'express'
-import {getUsuarios, getusuarioxid, postUsuario, putUsuario} from '../controladores/usuarios.Ctrl.js'
+import	{getUsuarios,getUsarioxid,postUsuarios,putUsuarios,patchUsuarios,deleteUsuarios} from '../controladores/usuarios.Ctrl.js'
+
 const router=Router()
-// armar nuestras rutas
 
-router.get('/usuarios', getUsuarios) //select
-router.get('/usuarios/:id', getusuarioxid) //select x id
-router.post('/usuarios', postUsuario) //insert
-router.put('/usuarios/:id', putUsuario) //update
-
+router.get('/usuarios',getUsuarios) //select
+router.get('/usuarios/:id',getUsarioxid) //select
+router.post('/usuarios',postUsuarios)
+router.put('/usuarios/:id',putUsuarios)
+router.patch('/usuarios/:id',patchUsuarios)
+router.delete('/usuarios/:id',deleteUsuarios)
 export default router
