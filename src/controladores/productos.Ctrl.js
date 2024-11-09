@@ -65,7 +65,12 @@ export const postProducto = async (req, res) => {
         console.log("Producto insertado con ID:", rows.insertId);
 
         // Responder con el id del producto insertado
-        res.status(201).json({ id: rows.insertId });
+        res.status(201).json({
+            mensaje: 'Producto guardado correctamente.',
+            prod_id: rows.insertId,
+            prod_imagen: prod_imagen // Se incluye la URL de la imagen (si existe)
+        });
+
 
     } catch (error) {
         console.error("Error al crear el producto:", error);
