@@ -1,11 +1,10 @@
 import{conmysql} from '../db.js'
 import { v2 as cloudinary } from 'cloudinary';
 
-// Configurar Cloudinary
 cloudinary.config({
-  cloud_name: 'dcles1yod',  // Reemplaza con tu Cloud Name
-  api_key: '129117278282968',        // Reemplaza con tu API Key
-  api_secret: 'vMTibViWQhHOccgIi2MoBuZKuyM'   // Reemplaza con tu API Secret
+  cloud_name: 'dlace3esz', 
+  api_key: '853357716749581',        
+  api_secret: 'eFwU8D93mcMIC2xmyTLnih_GH8s'  
 })
 
 export const getProductos=
@@ -24,7 +23,7 @@ async(req, res)=>{
         const [result]=await conmysql.query('select * from productos where prod_id=?', [req.params.id])
         if(result.length<=0)return res.status(404).json({
             cli_id:0,
-            message:"Producto no encontrado"
+            message:"PRODUCTO NO ENCONTRADO"
         })
         res.json(result[0])
     } catch (error) {
@@ -34,29 +33,24 @@ async(req, res)=>{
 
 export const postProducto = async (req, res) => {
     try {
-        // Verificar si los datos del producto están presentes
         const { prod_codigo, prod_nombre, prod_stock, prod_precio, prod_activo } = req.body;
-        console.log("Datos recibidos del cuerpo:", req.body);
+        console.log("DATOS RECIBIDOS DEL CUERPO:", req.body);
 
-        let prod_imagen = null; // Inicia la variable para la imagen
+        let prod_imagen = null; 
 
-        // Verificar si se subió una imagen
         if (req.file) {
-            console.log("Imagen recibida:", req.file);
-            // Subir la imagen a Cloudinary
+            console.log("IMAGEN RECIBIDA:", req.file);
             const uploadResult = await cloudinary.uploader.upload(req.file.path, {
-                folder: 'uploads', // Puedes agregar un folder en Cloudinary si lo deseas
-                public_id: `${Date.now()}-${req.file.originalname}` // Usamos el timestamp para garantizar un nombre único
+                folder: 'uploads', 
+                public_id: `${Date.now()}-${req.file.originalname}` 
             });
 
             console.log("Resultado de la carga en Cloudinary:", uploadResult);
-            // Obtener la URL segura de la imagen subida
             prod_imagen = uploadResult.secure_url;
         } else {
-            console.log("No se recibió ninguna imagen.");
+            console.log("NO SE RECIBIO NINGUNA IMAGEN.");
         }
 
-        // Insertar el producto en la base de datos
         const [rows] = await conmysql.query(
             'INSERT INTO productos (prod_codigo, prod_nombre, prod_stock, prod_precio, prod_activo, prod_imagen) VALUES (?, ?, ?, ?, ?, ?)',
             [prod_codigo, prod_nombre, prod_stock, prod_precio, prod_activo, prod_imagen]
@@ -64,17 +58,16 @@ export const postProducto = async (req, res) => {
 
         console.log("Producto insertado con ID:", rows.insertId);
 
-        // Responder con el id del producto insertado
         res.status(201).json({
-            mensaje: 'Producto guardado correctamente.',
+            mensaje: 'PRODUCTO GUARDADO CORRECTAMENTE.',
             prod_id: rows.insertId,
-            prod_imagen: prod_imagen // Se incluye la URL de la imagen (si existe)
+            prod_imagen: prod_imagen 
         });
 
 
     } catch (error) {
-        console.error("Error al crear el producto:", error);
-        return res.status(500).json({ message: 'Error del lado del servidor', error: error.message });
+        console.error("ERROR AL CREAR UN PRODUCTO", error);
+        return res.status(500).json({ message: 'ERROR DEL LADO DEL SERVIDOR', error: error.message });
     }
 };
 
@@ -84,21 +77,17 @@ export const putProductos = async (req, res) => {
         const { id } = req.params;
         const { prod_codigo, prod_nombre, prod_stock, prod_precio, prod_activo, prod_imagen } = req.body;
 
-        let newProd_imagen = prod_imagen; // Si ya se pasó una URL de imagen, la usaremos
+        let newProd_imagen = prod_imagen; 
 
-        // Verificar si se subió una nueva imagen
         if (req.file) {
-            // Subir la nueva imagen a Cloudinary
             const uploadResult = await cloudinary.uploader.upload(req.file.path, {
                 folder: 'uploads',
-                public_id: `${Date.now()}-${req.file.originalname}` // Usar un nombre único
+                public_id: `${Date.now()}-${req.file.originalname}` 
             });
 
-            // Obtener la URL segura de la imagen subida
             newProd_imagen = uploadResult.secure_url;
         }
 
-        // Actualizar el producto en la base de datos
         const [result] = await conmysql.query(
             'UPDATE productos SET prod_codigo = ?, prod_nombre = ?, prod_stock = ?, prod_precio = ?, prod_activo = ?, prod_imagen = ? WHERE prod_id = ?',
             [prod_codigo, prod_nombre, prod_stock, prod_precio, prod_activo, newProd_imagen, id]
@@ -110,7 +99,6 @@ export const putProductos = async (req, res) => {
             });
         }
 
-        // Obtener el producto actualizado
         const [rows] = await conmysql.query('SELECT * FROM productos WHERE prod_id = ?', [id]);
         res.json(rows[0]);
 
@@ -125,7 +113,6 @@ export const patchProductos=
 async (req,res)=>{
     try {
         const {id}=req.params
-        //console.log(req.body)
         const {prod_codigo, prod_nombre, prod_stock, prod_precio, prod_activo, prod_imagen}=req.body
         console.log(prod_nombre)
         const [result]=await conmysql.query('update productos set prod_codigo = IFNULL(?, prod_codigo), prod_nombre = IFNULL(?, prod_nombre), prod_stock = IFNULL(?, prod_stock), prod_precio = IFNULL(?, prod_precio), prod_activo = IFNULL(?, prod_activo), prod_imagen = IFNULL(?, prod_imagen) WHERE prod_id = ?',
