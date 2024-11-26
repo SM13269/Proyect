@@ -14,12 +14,12 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
-const corsOptions = {
+/*const corsOptions = {
   origin: "http://localhost:8100", //la direccion ip del servidor
   methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
   cedentials: true,
-};
-app.use(cors(corsOptions));
+};*/
+app.use(cors());
 app.use(express.json()); // Para que interprete los objetos JSON
 app.use(express.urlencoded({ extended: true })); //se añade para poder receptar formularios
 app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
